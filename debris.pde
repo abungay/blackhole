@@ -4,21 +4,32 @@ class Debris {
   PVector pos;
   PVector vel;
   
-  Debris(PVector pos, PVector[] verts){
+  Debris(PVector pos, int nVerts){
     this.pos = pos;
     this.vel = new PVector(0, 0);
-    this.verts = verts;
+    this.verts =  new PVector[nVerts];
+    float angle = TWO_PI/nVerts;
+    for(int f = 0; f < nVerts; f++){
+      float myangle = f*angle;
+      float dist = (random(40) - 20) + 100;
+      this.verts[f] = new PVector();
+      this.verts[f].x = dist*cos(myangle);
+      this.verts[f].y = dist*sin(myangle);
+    }
   }
   
   void update() {
   }
   
   void draw() {
+    pushMatrix();
+    translate(this.pos.x, this.pos.y);
     beginShape();
-    for (int j = 0; j <= verts.length; j++){
-      vertex(pos.x + verts[j].x, pos.y + verts[j].y);
+    for (int j = 0; j < verts.length; j++){
+      vertex(verts[j].x, verts[j].y);
     }
     endShape(CLOSE);
+    popMatrix();
   }
 }
 
