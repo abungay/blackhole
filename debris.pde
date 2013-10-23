@@ -6,7 +6,7 @@ class Debris {
   
   Debris(PVector pos, int nVerts){
     this.pos = pos;
-    this.vel = new PVector(0, 1);
+    this.vel = new PVector(0, (random(1)-0.5)+1);
     this.verts =  new PVector[nVerts];
     float angle = TWO_PI/nVerts;
     for(int f = 0; f < nVerts; f++){
