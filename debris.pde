@@ -6,7 +6,7 @@ class Debris {
   
   Debris(PVector pos, int nVerts){
     this.pos = pos;
-    this.vel = new PVector(0, 0);
+    this.vel = new PVector(0, 1);
     this.verts =  new PVector[nVerts];
     float angle = TWO_PI/nVerts;
     for(int f = 0; f < nVerts; f++){
@@ -19,6 +19,7 @@ class Debris {
   }
   
   void update() {
+    pos.add(vel);
   }
   
   void draw() {
@@ -33,7 +34,7 @@ class Debris {
   }
 }
 
-boolean linesIntersect(PVector p1, PVector p2, PVector q1, PVector q2) {
+Boolean linesIntersect(PVector p1, PVector p2, PVector q1, PVector q2) {
   float mp = (p2.y-p1.y)/(p2.x-p1.x);
   float mq = (q2.y-q1.y)/(q2.x-q1.x);
   if (mp == mq) return false;
