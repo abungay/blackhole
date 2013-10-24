@@ -1,16 +1,33 @@
 int frame = 0;
 ArrayList<Debris> d;
+PVector bpos,bvel,accel;
+final int bs = 30;
 
 void setup(){
   size(700,600);
+  bpos = new PVector(350,585);
+  bvel = new PVector(0,0);
+  accel = new PVector(0, 0.1633);
   d = new ArrayList<Debris>();
 }
 
 void draw(){
   frame++;
+  bvel.add(accel);
+  bpos.add(bvel);
+  if (bvel.x > 0){
+    accel.x = -0.1;
+  }else if(bvel.x < 0){
+    accel.x = 0.1;
+  }
   background(200);
+  fill(191,169,82);
   updateAll();
   generateDebris();
+  fill(255,0,0);
+  ellipse(bpos.x,bpos.y,bs,bs);
+  fill(0);
+  text("Use arrow keys to move ball, ball vs poly collision not implemented yet.",150,20);
   checkForCollisions();
 }
 
@@ -55,6 +72,10 @@ void checkForCollisions(){
    }
    }
  }
+ if (bpos.y >= height-bs/2){
+   bpos.y = height-bs/2;
+   bvel.y = 0;
+ }
 }
 
 void generateDebris(){
@@ -74,4 +95,18 @@ void updateAll(){
       theD.draw();
     }
   }
+}
+
+void keyPressed(){
+ if (key == CODED) {
+   if (keyCode == RIGHT){
+     bvel.x = 3;
+   }else if(keyCode == LEFT){
+     bvel.x = -3;
+   }else if(keyCode == UP){
+     if (bvel.y == 0){
+     bvel.y = -5;
+     }
+   }
+ }
 }

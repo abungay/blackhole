@@ -1,4 +1,3 @@
-
 class Debris {
   PVector[] verts;
   PVector pos;
