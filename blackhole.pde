@@ -15,33 +15,37 @@ void draw(){
 }
 
 void checkForCollisions(){
-  if (d.size() >= 2 && frame > 500){
-  for (int i = 0; i < d.size() ; i++) {
-  for (int u = 0; i < d.size(); u++){
-    for (int p = 0; p < d.get(i).verts.length; p++){
+  Debris[] theD = new Debris[d.size()];
+  theD = d.toArray(theD);
+  if(theD.length >=2){
+  for (int i = 0; i < theD.length-1 ; i++) {
+    println(i);
+  for (int u = 0; u < theD.length-1 ; u++){
+    println(u);
+    for (int p = 0; p < theD[i].verts.length-1; p++){
       PVector p1;
       PVector p2;
-      if (p == d.get(i).verts.length-1){
-       p1 = d.get(i).verts[d.get(i).verts.length-1];
-       p2 = d.get(i).verts[0];
+      if (p == theD[i].verts.length){
+       p1 = theD[i].verts[theD[i].verts.length-1];
+       p2 = theD[i].verts[0];
       }else{
-       p1 = d.get(i).verts[p];
-       p2 = d.get(i).verts[p+1];
+       p1 = theD[i].verts[p];
+       p2 = theD[i].verts[p+1];
       }
-    for (int e = 0; e < d.get(u).verts.length; e++){
+    for (int e = 0; e < theD[u].verts.length-1; e++){
       PVector q1;
       PVector q2;
-      if (e == d.get(u).verts.length-1){
-       q1 = d.get(u).verts[d.get(u).verts.length-1];
-       q2 = d.get(u).verts[0];
+      if (e == theD[u].verts.length){
+       q1 = theD[u].verts[theD[u].verts.length-1];
+       q2 = theD[u].verts[0];
       }else{
-       q1 = d.get(u).verts[e];
-       q2 = d.get(u).verts[e+1];
+       q1 = theD[u].verts[e];
+       q2 = theD[u].verts[e+1];
       }
       if (linesIntersect(p1,p2,q1,q2) == true){
-       float newVely = min(d.get(i).vel.y,d.get(u).vel.y = 0);
-       d.get(i).vel.y = newVely;
-       d.get(u).vel.y = newVely; 
+       float newVely = min(theD[i].vel.y,theD[u].vel.y = 0);
+       theD[i].vel.y = newVely;
+       theD[u].vel.y = newVely; 
        println("one of the polygons is touching another one!");
       }
     }
