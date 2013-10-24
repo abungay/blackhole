@@ -19,9 +19,7 @@ void checkForCollisions(){
   theD = d.toArray(theD);
   if(theD.length >=2){
   for (int i = 0; i < theD.length-1 ; i++) {
-    println(i);
   for (int u = 0; u < theD.length-1 ; u++){
-    println(u);
     for (int p = 0; p < theD[i].verts.length-1; p++){
       PVector p1;
       PVector p2;
@@ -35,6 +33,8 @@ void checkForCollisions(){
     for (int e = 0; e < theD[u].verts.length-1; e++){
       PVector q1;
       PVector q2;
+      PVector b1 = new PVector(0,600);
+      PVector b2 = new PVector(700,600);
       if (e == theD[u].verts.length){
        q1 = theD[u].verts[theD[u].verts.length-1];
        q2 = theD[u].verts[0];
@@ -43,10 +43,9 @@ void checkForCollisions(){
        q2 = theD[u].verts[e+1];
       }
       if (linesIntersect(p1,p2,q1,q2) == true){
-       float newVely = min(theD[i].vel.y,theD[u].vel.y = 0);
+       float newVely = min(theD[i].vel.y,theD[u].vel.y);
        theD[i].vel.y = newVely;
        theD[u].vel.y = newVely; 
-       println("one of the polygons is touching another one!");
       }
     }
     }
