@@ -3,6 +3,7 @@ class Debris {
   PVector[] verts;
   PVector pos;
   PVector vel;
+  PVector lowestpt;
   
   Debris(PVector pos, int nVerts){
     this.pos = pos;
@@ -15,6 +16,10 @@ class Debris {
       this.verts[f] = new PVector();
       this.verts[f].x = dist*cos(myangle);
       this.verts[f].y = dist*sin(myangle);
+      lowestpt = new PVector(0,0);
+      if (dist*sin(myangle) > lowestpt.y){
+        lowestpt.y = dist*sin(myangle);
+      }
     }
   }
   
