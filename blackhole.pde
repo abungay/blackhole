@@ -21,13 +21,15 @@ void draw(){
     accel.x = 0.1;
   }
   background(200);
+  translate(0,500-bpos.y);
   fill(191,169,82);
   updateAll();
   generateDebris();
   fill(255,0,0);
   ellipse(bpos.x,bpos.y,bs,bs);
   fill(0);
-  text("Use arrow keys to move ball, ball vs poly collision not implemented yet.",150,20);
+  text("Use arrow keys to move ball, ball vs poly collision not implemented yet.",150,100);
+  line(0,601,700,601);
   checkForCollisions();
 }
 
@@ -56,8 +58,8 @@ void checkForCollisions(){
        q1 = PVector.add(theD[u].verts[theD[u].verts.length-1], theD[u].pos);
        q2 = PVector.add(theD[u].verts[0], theD[u].pos);
       }else{
-       q1 = PVector.add(theD[u].verts[e], theD[u].pos);;
-       q2 = PVector.add(theD[u].verts[e+1], theD[u].pos);;
+       q1 = PVector.add(theD[u].verts[e], theD[u].pos);
+       q2 = PVector.add(theD[u].verts[e+1], theD[u].pos);
       }
       if (linesIntersect(p1,p2,q1,q2) == true){
        float newVely = min(theD[i].vel.y,theD[u].vel.y);
@@ -103,7 +105,8 @@ void keyPressed(){
      bvel.x = 3;
    }else if(keyCode == LEFT){
      bvel.x = -3;
-   }else if(keyCode == UP){
+   }
+   if(keyCode == UP){
      if (bvel.y == 0){
      bvel.y = -5;
      }
