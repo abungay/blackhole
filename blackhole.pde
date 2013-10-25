@@ -81,7 +81,7 @@ void checkForCollisions(){
 }
 
 void generateDebris(){
-  if (frame % 180 == 0){
+  if (frame % 180 == 0 && d.size() < 20){
    PVector dpos = new PVector();
    dpos.x = random(width);
    dpos.y = -120;
