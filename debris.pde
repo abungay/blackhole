@@ -3,8 +3,12 @@ class Debris {
   PVector pos;
   PVector vel;
   
-  Debris(PVector pos, int nVerts){
+  Debris(PVector pos) {
     this.pos = pos;
+  }
+  
+  Debris(PVector pos, int nVerts){
+    this(pos);
     this.vel = new PVector(0, (random(1)-0.5)+1);
     this.verts =  new PVector[nVerts];
     float angle = TWO_PI/nVerts;
