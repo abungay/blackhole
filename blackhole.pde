@@ -37,41 +37,56 @@ void draw() {
   checkForCollisions();
 }
 
-Boolean polyonIntersection(Debris d1, Debris d2) {
-  for (int p = 0; p < theD[i].verts.length; p++) {
+Boolean polygonIntersection(Debris d1, Debris d2) {
+  for (int i = 0; i < d1.verts.length; i++) {
     PVector p1;
     PVector p2;
-    if (p == theD[i].verts.length-1) {
-      p1 = PVector.add(theD[i].verts[theD[i].verts.length-1], theD[i].pos);
-      p2 = PVector.add(theD[i].verts[0], theD[i].pos);
+    if (i == d1.verts.length-1) {
+      p1 = PVector.add(d1.verts[d1.verts.length-1], d1.pos);
+      p2 = PVector.add(d1.verts[0], d1.pos);
     }
     else {
-      p1 = PVector.add(theD[i].verts[p], theD[i].pos);
-      p2 = PVector.add(theD[i].verts[p+1], theD[i].pos);
+      p1 = PVector.add(d1.verts[i], d1.pos);
+      p2 = PVector.add(d1.verts[i+1], d1.pos);
     }
-    for (int e = 0; e < theD[u].verts.length; e++) {
+    for (int j = 0; j < d2.verts.length; j++) {
       PVector q1;
       PVector q2;
-      PVector b1 = new PVector(0, 600);
-      PVector b2 = new PVector(700, 600);
-      if (e == theD[u].verts.length-1) {
-        q1 = PVector.add(theD[u].verts[theD[u].verts.length-1], theD[u].pos);
-        q2 = PVector.add(theD[u].verts[0], theD[u].pos);
+      if (j == d2.verts.length-1) {
+        q1 = PVector.add(d2.verts[d2.verts.length-1], d2.pos);
+        q2 = PVector.add(d2.verts[0], d2.pos);
       }
       else {
-        q1 = PVector.add(theD[u].verts[e], theD[u].pos);
-        q2 = PVector.add(theD[u].verts[e+1], theD[u].pos);
+        q1 = PVector.add(d2.verts[j], d2.pos);
+        q2 = PVector.add(d2.verts[j+1], d2.pos);
       }
       if (linesIntersect(p1, p2, q1, q2) == true) {
-        float newVely = min(theD[i].vel.y, theD[u].vel.y);
-        theD[i].vel.y = newVely;
-        theD[u].vel.y = newVely;
-      }
-      if (linesIntersect(p1, p2, b1, b2) == true) {
-        theD[i].vel.y = 0;
+        return true;
       }
     }
   }
+  return false;
+}
+
+Boolean IsPolyOnScreen(Debris d1){
+  for (int i = 0; i < d1.verts.length; i++) {
+    PVector p1;
+    PVector p2;
+    PVector b1 = new PVector(0, 600);
+    PVector b2 = new PVector(700, 600);
+    if (i == d1.verts.length-1) {
+      p1 = PVector.add(d1.verts[d1.verts.length-1], d1.pos);
+      p2 = PVector.add(d1.verts[0], d1.pos);
+    }
+    else {
+      p1 = PVector.add(d1.verts[i], d1.pos);
+      p2 = PVector.add(d1.verts[i+1], d1.pos);
+    }
+    if (linesIntersect(p1, p2, b1, b2) == true) {
+      return true;
+    }
+  }
+  return false;
 }
 
 void checkForCollisions() {
@@ -79,49 +94,30 @@ void checkForCollisions() {
   theD = d.toArray(theD);
   if (theD.length >=2) {
     for (int i = 0; i < theD.length; i++) {
-      for (int u = 0; u < theD.length; u++) {
-        for (int p = 0; p < theD[i].verts.length; p++) {
-          PVector p1;
-          PVector p2;
-          if (p == theD[i].verts.length-1) {
-            p1 = PVector.add(theD[i].verts[theD[i].verts.length-1], theD[i].pos);
-            p2 = PVector.add(theD[i].verts[0], theD[i].pos);
-          }
-          else {
-            p1 = PVector.add(theD[i].verts[p], theD[i].pos);
-            p2 = PVector.add(theD[i].verts[p+1], theD[i].pos);
-          }
-          for (int e = 0; e < theD[u].verts.length; e++) {
-            PVector q1;
-            PVector q2;
-            PVector b1 = new PVector(0, 600);
-            PVector b2 = new PVector(700, 600);
-            if (e == theD[u].verts.length-1) {
-              q1 = PVector.add(theD[u].verts[theD[u].verts.length-1], theD[u].pos);
-              q2 = PVector.add(theD[u].verts[0], theD[u].pos);
-            }
-            else {
-              q1 = PVector.add(theD[u].verts[e], theD[u].pos);
-              q2 = PVector.add(theD[u].verts[e+1], theD[u].pos);
-            }
-            if (linesIntersect(p1, p2, q1, q2) == true) {
-              float newVely = min(theD[i].vel.y, theD[u].vel.y);
+      for (int j = 0; j < theD.length; j++) {
+            if (polygonIntersection(theD[i],theD[j]) == true){
+              float newVely = min(theD[i].vel.y, theD[j].vel.y);
               theD[i].vel.y = newVely;
-              theD[u].vel.y = newVely;
+              theD[j].vel.y = newVely;
             }
-            if (linesIntersect(p1, p2, b1, b2) == true) {
-              theD[i].vel.y = 0;
-            }
-          }
         }
       }
     }
   }
+  
+void checkOffScreen(){
+  Debris[] theD = new Debris[d.size()];
+  theD = d.toArray(theD);
+  for (int i = 0; i < theD.length; i++) {
+    if (IsPolyOnScreen(theD[i]) == true){
+      d1.vel.y = 0;
+    } 
+  }
+}
   // if (bpos.y >= height-bs/2){
   //   bpos.y = height-bs/2;
   //   bvel.y = 0;
   // }
-}
 
 void generateDebris() {
   if (frame % 180 == 0 && d.size() < 20) {
