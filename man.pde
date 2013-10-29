@@ -42,6 +42,8 @@ class Man extends Debris {
     for(int f = 0; f < this.verts.length; f++){
       this.verts[f].x -= 37;
       this.verts[f].y -= 73;
+      this.verts[f].x *= 0.70;
+      this.verts[f].y *= 0.70;
     }
   }
 }

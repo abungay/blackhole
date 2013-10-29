@@ -2,6 +2,9 @@ class Debris {
   PVector[] verts;
   PVector pos;
   PVector vel;
+  int R;
+  int G;
+  int B;
   
   Debris(PVector pos) {
     this.pos = pos;
@@ -11,6 +14,9 @@ class Debris {
     this(pos);
     this.vel = new PVector(0, (random(1)-0.5)+1);
     this.verts =  new PVector[nVerts];
+    this.R = int(190 + (random(40)-20));
+    this.G = int(170 + (random(40)-20));
+    this.B = int(80 + (random(40)-20));
     float angle = TWO_PI/nVerts;
     for(int f = 0; f < nVerts; f++){
       float myangle = f*angle;

@@ -1,13 +1,12 @@
 int frame = 0;
 ArrayList<Debris> d;
+PVector accel;
+Boolean movinghoriz = false;
+Boolean maninair = true;
 Man m;
-PVector bpos, bvel, accel;
-final int bs = 30;
 
 void setup() {
   size(700, 600);
-  //bpos = new PVector(350,585);
-  //bvel = new PVector(0,0);
   accel = new PVector(0, 0.1633);
   d = new ArrayList<Debris>();
   m = new Man(new PVector(350, 530));
@@ -15,26 +14,30 @@ void setup() {
 
 void draw() {
   frame++;
-  //bvel.add(accel);
-  //bpos.add(bvel);
-  //m.vel.add(accel);
+  m.vel.x += accel.x;
+  if (maninair == true) {
+  m.vel.y += accel.y;
+  }
   m.pos.add(m.vel);
-  //  if (bvel.x > 0){
-  //    accel.x = -0.1;
-  //  }else if(bvel.x < 0){
-  //    accel.x = 0.1;
-  //  }
+  if (!movinghoriz){
+  if (m.vel.x > 0){
+    accel.x = -0.05;
+  }else if(m.vel.x < 0){
+    accel.x = 0.05;
+  }else{
+    accel.x = 0;
+  }
+  }
   background(200);
-  //translate(0,500-bpos.y);
-  fill(191, 169, 82);
+  translate(0,400-m.pos.y); //make camera follow man
   updateAll();
   generateDebris();
-  fill(255, 0, 0);
-  //ellipse(bpos.x,bpos.y,bs,bs);
   fill(0);
-  text("Use arrow keys to move ball, ball vs poly collision not implemented yet.", 150, 100);
+  text("Use arrow keys to move ball, man vs poly collision in testing.", 150, 200);
+  text("RUNNNNNNNNNNN......!!! Ur height is " + int(m.pos.y),150,-300);
   line(0, 601, 700, 601);
   checkForCollisions();
+  checkOffScreen();
 }
 
 Boolean polygonIntersection(Debris d1, Debris d2) {
@@ -68,7 +71,7 @@ Boolean polygonIntersection(Debris d1, Debris d2) {
   return false;
 }
 
-Boolean IsPolyOnScreen(Debris d1){
+Boolean IsPolyOffScreen(Debris d1){
   for (int i = 0; i < d1.verts.length; i++) {
     PVector p1;
     PVector p2;
@@ -94,6 +97,16 @@ void checkForCollisions() {
   theD = d.toArray(theD);
   if (theD.length >=2) {
     for (int i = 0; i < theD.length; i++) {
+            if (polygonIntersection(theD[i],m) == true) {
+              m.vel.x = theD[i].vel.x;
+              m.vel.y = theD[i].vel.y;
+              if (theD[i].vel.y == 0){
+                maninair = false;
+              }
+            }
+//            }else {
+//               maninair = true; 
+//            }
       for (int j = 0; j < theD.length; j++) {
             if (polygonIntersection(theD[i],theD[j]) == true){
               float newVely = min(theD[i].vel.y, theD[j].vel.y);
@@ -109,15 +122,15 @@ void checkOffScreen(){
   Debris[] theD = new Debris[d.size()];
   theD = d.toArray(theD);
   for (int i = 0; i < theD.length; i++) {
-    if (IsPolyOnScreen(theD[i]) == true){
-      d1.vel.y = 0;
+    if (IsPolyOffScreen(theD[i]) == true){
+      theD[i].vel.y = 0;
     } 
   }
+  if (IsPolyOffScreen(m) == true){
+    maninair = false;
+    m.vel.y = 0;
+  }
 }
-  // if (bpos.y >= height-bs/2){
-  //   bpos.y = height-bs/2;
-  //   bvel.y = 0;
-  // }
 
 void generateDebris() {
   if (frame % 180 == 0 && d.size() < 20) {
@@ -130,10 +143,12 @@ void generateDebris() {
 }
 
 void updateAll() {
+  fill(0,0,255);
   m.update();
   m.draw();
   if (d.size() > 0) {
     for (Debris theD : d) {
+      fill(theD.R,theD.G,theD.B);
       theD.update();
       theD.draw();
     }
@@ -143,15 +158,27 @@ void updateAll() {
 void keyPressed() {
   if (key == CODED) {
     if (keyCode == RIGHT) {
-      m.vel.x = 3;
-    }
-    else if (keyCode == LEFT) {
-      m.vel.x = -3;
+      m.vel.x = 1.5;
+      movinghoriz = true;
+    }else if (keyCode == LEFT) {
+      m.vel.x = -1.5;
+      movinghoriz = true;
     }
     if (keyCode == UP) {
       if (m.vel.y == 0) {
-        m.vel.y = -5;
+        maninair = true;
+        m.vel.y = -4;
       }
+    }
+  }
+}
+
+void keyReleased(){
+  if (key == CODED) {
+    if (keyCode == RIGHT) {
+      movinghoriz = false;
+    }else if (keyCode == LEFT) {
+      movinghoriz = false;
     }
   }
 }
