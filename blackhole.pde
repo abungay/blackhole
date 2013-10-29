@@ -3,12 +3,16 @@ ArrayList<Debris> d;
 PVector accel;
 Boolean movinghoriz = false;
 Boolean maninair = true;
+Boolean manonground = false;
+Boolean manonpoly = false;
+ArrayList<Debris> mcols;
 Man m;
 
 void setup() {
   size(700, 600);
   accel = new PVector(0, 0.1633);
   d = new ArrayList<Debris>();
+  mcols = new ArrayList<Debris>();
   m = new Man(new PVector(350, 530));
 }
 
@@ -21,9 +25,9 @@ void draw() {
   m.pos.add(m.vel);
   if (!movinghoriz){
   if (m.vel.x > 0){
-    accel.x = -0.05;
+    accel.x = -0.1;
   }else if(m.vel.x < 0){
-    accel.x = 0.05;
+    accel.x = 0.1;
   }else{
     accel.x = 0;
   }
@@ -34,7 +38,7 @@ void draw() {
   generateDebris();
   fill(0);
   text("Use arrow keys to move ball, man vs poly collision in testing.", 150, 200);
-  text("RUNNNNNNNNNNN......!!! Ur height is " + int(m.pos.y),150,-300);
+  text("Your height is " + int(m.pos.y),150,-300);
   line(0, 601, 700, 601);
   checkForCollisions();
   checkOffScreen();
@@ -100,13 +104,25 @@ void checkForCollisions() {
             if (polygonIntersection(theD[i],m) == true) {
               m.vel.x = theD[i].vel.x;
               m.vel.y = theD[i].vel.y;
+              maninair = false;
+              mcols.add(theD[i]);
+              m.vel.y = 0;
               if (theD[i].vel.y == 0){
                 maninair = false;
+                m.vel.y = 0;
+                manonpoly = true;
               }
+              if (m.vel.y == 0 && theD[i].pos.y < m.pos.y){
+                restartGame();
+              }
+            }else{
+             if (mcols.contains(theD[i])) {
+               mcols.remove(theD[i]);
+             }
+             if (mcols.size() == 0){
+               maninair = true;
+             }
             }
-//            }else {
-//               maninair = true; 
-//            }
       for (int j = 0; j < theD.length; j++) {
             if (polygonIntersection(theD[i],theD[j]) == true){
               float newVely = min(theD[i].vel.y, theD[j].vel.y);
@@ -129,14 +145,20 @@ void checkOffScreen(){
   if (IsPolyOffScreen(m) == true){
     maninair = false;
     m.vel.y = 0;
+    manonground = true;
+  }else{
+    manonground = false;
+    if (manonpoly = false){
+     maninair = true;
+    } 
   }
 }
 
 void generateDebris() {
-  if (frame % 180 == 0 && d.size() < 20) {
+  if (frame % 180 == 0 && d.size() < 40) {
     PVector dpos = new PVector();
     dpos.x = random(width);
-    dpos.y = -120;
+    dpos.y = m.pos.y-520;
     int mverts = int(random(5)+5);
     d.add(new Debris(dpos, mverts));
   }
@@ -181,5 +203,14 @@ void keyReleased(){
       movinghoriz = false;
     }
   }
+}
+
+void restartGame(){
+  text("YOU DIED!",200,300);
+  
+  maninair = true;
+  d = new ArrayList<Debris>();
+  mcols = new ArrayList<Debris>();
+  m = new Man(new PVector(350, 530));
 }
 
