@@ -31,6 +31,8 @@ void draw() {
   }else{
     accel.x = 0;
   }
+  }else{
+   accel.x = 0; 
   }
   background(200);
   translate(0,400-m.pos.y); //make camera follow man
@@ -107,13 +109,15 @@ void checkForCollisions() {
               maninair = false;
               mcols.add(theD[i]);
               m.vel.y = 0;
+              m.pos.x += ((m.pos.x-theD[i].pos.x)/(abs(m.pos.x-theD[i].pos.x)))*1;
+              m.pos.y += ((m.pos.y-theD[i].pos.y)/(abs(m.pos.y-theD[i].pos.y)))*1;
               if (theD[i].vel.y == 0){
                 maninair = false;
                 m.vel.y = 0;
                 manonpoly = true;
               }
               if (m.vel.y == 0 && theD[i].pos.y < m.pos.y){
-                restartGame();
+                //restartGame();
               }
             }else{
              if (mcols.contains(theD[i])) {
@@ -189,7 +193,7 @@ void keyPressed() {
     if (keyCode == UP) {
       if (m.vel.y == 0) {
         maninair = true;
-        m.vel.y = -4;
+        m.vel.y = -6;
       }
     }
   }
