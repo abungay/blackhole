@@ -20,7 +20,7 @@ class Debris {
     float angle = TWO_PI/nVerts;
     for(int f = 0; f < nVerts; f++){
       float myangle = f*angle;
-      float dist = (random(40) - 20) + 100;
+      float dist = (random(40) - 20) + 70;
       this.verts[f] = new PVector();
       this.verts[f].x = dist*cos(myangle);
       this.verts[f].y = dist*sin(myangle);

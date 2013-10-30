@@ -5,6 +5,7 @@ Boolean movinghoriz = false;
 Boolean maninair = true;
 Boolean manonground = false;
 Boolean manonpoly = false;
+float blackholesize = 5;
 ArrayList<Debris> mcols;
 Man m;
 
@@ -18,8 +19,9 @@ void setup() {
 
 void draw() {
   frame++;
+  blackholesize += 0.3;
   m.vel.x += accel.x;
-  if (maninair == true) {
+  if (true) {
   m.vel.y += accel.y;
   }
   m.pos.add(m.vel);
@@ -38,10 +40,13 @@ void draw() {
   translate(0,400-m.pos.y); //make camera follow man
   updateAll();
   generateDebris();
+  fill(76,108,0);
+  line(0, 601, 700, 601);
+  rect(0,601,700,601);
   fill(0);
+  ellipse(350,800,blackholesize,blackholesize);
   text("Use arrow keys to move ball, man vs poly collision in testing.", 150, 200);
   text("Your height is " + int(m.pos.y),150,-300);
-  line(0, 601, 700, 601);
   checkForCollisions();
   checkOffScreen();
 }
@@ -101,30 +106,28 @@ Boolean IsPolyOffScreen(Debris d1){
 void checkForCollisions() {
   Debris[] theD = new Debris[d.size()];
   theD = d.toArray(theD);
+  int crush = 0;
   if (theD.length >=2) {
     for (int i = 0; i < theD.length; i++) {
-            if (polygonIntersection(theD[i],m) == true) {
-              m.vel.x = theD[i].vel.x;
-              m.vel.y = theD[i].vel.y;
+            if (polygonIntersection(theD[i],m)) {
+              while (polygonIntersection(theD[i],m)) {
+                m.pos.x += ((m.pos.x-theD[i].pos.x)/(abs(m.pos.x-theD[i].pos.x)))*0.1;
+                m.pos.y += ((m.pos.y-theD[i].pos.y)/(abs(m.pos.y-theD[i].pos.y)))*0.1;
+                crush++;
+              }
               maninair = false;
               mcols.add(theD[i]);
-              m.vel.y = 0;
-              m.pos.x += ((m.pos.x-theD[i].pos.x)/(abs(m.pos.x-theD[i].pos.x)))*1;
-              m.pos.y += ((m.pos.y-theD[i].pos.y)/(abs(m.pos.y-theD[i].pos.y)))*1;
               if (theD[i].vel.y == 0){
                 maninair = false;
                 m.vel.y = 0;
                 manonpoly = true;
-              }
-              if (m.vel.y == 0 && theD[i].pos.y < m.pos.y){
-                //restartGame();
               }
             }else{
              if (mcols.contains(theD[i])) {
                mcols.remove(theD[i]);
              }
              if (mcols.size() == 0){
-               maninair = true;
+               manonpoly = false;
              }
             }
       for (int j = 0; j < theD.length; j++) {
@@ -136,6 +139,10 @@ void checkForCollisions() {
         }
       }
     }
+    if (crush > 100){
+     println("You were crushed. (" + frameCount + ")");
+     restartGame();
+    }
   }
   
 void checkOffScreen(){
@@ -146,15 +153,21 @@ void checkOffScreen(){
       theD[i].vel.y = 0;
     } 
   }
-  if (IsPolyOffScreen(m) == true){
-    maninair = false;
-    m.vel.y = 0;
+  if (m.pos.y > 600 - 42.7){
+    m.pos.y = 600 - 42.7;
     manonground = true;
+    m.vel.y = 0;
   }else{
     manonground = false;
     if (manonpoly = false){
-     maninair = true;
-    } 
+     maninair = true; 
+    }
+  }
+  if (m.pos.x > 700 + 25.9 && m.vel.x > 0){
+   m.pos.x = -26.6; 
+  }
+  if (m.pos.x < -26.6 && m.vel.x < 0){
+   m.pos.x = 700 + 25.9; 
   }
 }
 
@@ -191,7 +204,7 @@ void keyPressed() {
       movinghoriz = true;
     }
     if (keyCode == UP) {
-      if (m.vel.y == 0) {
+      if (maninair = false || m.vel.y == 0) {
         maninair = true;
         m.vel.y = -6;
       }
@@ -211,10 +224,10 @@ void keyReleased(){
 
 void restartGame(){
   text("YOU DIED!",200,300);
-  
   maninair = true;
   d = new ArrayList<Debris>();
   mcols = new ArrayList<Debris>();
   m = new Man(new PVector(350, 530));
+  blackholesize = 5;
 }
 
