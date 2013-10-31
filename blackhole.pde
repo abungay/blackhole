@@ -52,7 +52,7 @@ void draw() {
   checkOffScreen();
   checkBlackHole();
   }else{
-     fill(200,200,200);
+     fill(255,50,50);
      textSize(50);
      text("YOU DIED!",200,300);
      textSize(30);
@@ -191,18 +191,11 @@ void checkOffScreen(){
 }
 
 void checkBlackHole(){
-//  Debris[] theD = new Debris[d.size()];
-//  theD = d.toArray(theD);
-//  for (int i = 0; i < theD.length; i++) {
-//    if (dist(theD[i].pos.x,theD[i].pos.y,350,800) <= blackholesize){
-//     theD[i].remove 
+//  for (Debris theD : d) {
+//    if (dist(theD.pos.x,theD.pos.y,350,800) <= blackholesize/2){
+//     d.remove(theD);
 //    }
-//  }
-  for (Debris theD : d) {
-    if (dist(theD.pos.x,theD.pos.y,350,800) <= blackholesize/2){
-     d.remove(theD);
-    }
-  }
+//  } //Giving error
   if (dist(m.pos.x,m.pos.y,350,800) <= blackholesize/2){
    restartGame(1); 
   }
