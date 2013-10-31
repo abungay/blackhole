@@ -3,6 +3,8 @@ class Man extends Debris {
     super(pos);
     this.vel = new PVector(0, 0);
     this.verts = new PVector[]{
+      //manually entered vertexes used to form the man when connected
+      //these points were takenfrom an image in MS Paint :)
       new PVector(30,0),
       new PVector(45,0),
       new PVector(54,5),
@@ -40,6 +42,7 @@ class Man extends Debris {
       new PVector(22,5)
     };
     for(int f = 0; f < this.verts.length; f++){
+      //translate the points to the center of the man instead of being from 0,0 ( how they were taken from MS Paint )
       this.verts[f].x -= 37;
       this.verts[f].y -= 73;
       this.verts[f].x *= 0.70;
