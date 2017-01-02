@@ -1,4 +1,4 @@
-import java.util.Iterator; //used for being able to safely remove asteroids from arraylist when blackhole touches them
+import java.util.Iterator;
 
 int frame = 0; //used for keeping track of current frame
 ArrayList<Debris> d; //list of all debris/asteroids that are on the screen
